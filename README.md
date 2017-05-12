@@ -4,7 +4,7 @@
 
 This bot was created for the r/GlobalOffensive Match Thread team to allow them the ability to sticky threads if certain criteria was met first.
 
-[](https://i.imgur.com/oTiT1aa.png)
+![StickyBot](https://i.imgur.com/oTiT1aa.png)
 
 ### Requirements
 * [Python 3](https://www.python.org/downloads/)
