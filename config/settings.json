@@ -7,7 +7,7 @@
         "John": "U01234567",
         "Jane": "U01234567"
     },
-	"reddit": {
+    "reddit": {
         "subreddit": "SUBREDDIT_NAME",
         "username": "USER",
         "password": "PASS",
