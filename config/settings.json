@@ -8,9 +8,9 @@
         "Jane": "U01234567"
     },
 	"reddit": {
-		"subreddit": "SUBREDDIT_NAME",
-		"username": "USER",
-		"password": "PASS",
+        "subreddit": "SUBREDDIT_NAME",
+        "username": "USER",
+        "password": "PASS",
         "client_id": "REDDIT_CLIENT_ID",
         "client_secret": "REDDIT_CLIENT_SECRET"
 	}
