@@ -4,6 +4,7 @@ import time
 from slackclient import SlackClient
 # Project imports
 import reddit
+import call_home
 from config import cfg
 
 settings = cfg.readJson('settings.json')
@@ -13,6 +14,7 @@ BOT_NAME = 'stickybot'
 BOT_ID = settings['stickybot']['bot_id']
 BOT_CALL = '<@{}>'.format(BOT_ID)
 BOT_CMD = '!sticky'
+BOT_CMD_UNSTICKY = '!unsticky'
 
 slack_client = SlackClient(settings['stickybot']['token'])
 SOCKET_READ_DELAY = 1
@@ -50,6 +52,9 @@ def parser(rtm_out):
                 elif data['text'].startswith(BOT_CMD):
                     msg = data['text'].split(BOT_CMD)[1].strip().lower()
                     return msg, data['channel'], data['user']
+                elif data['text'].startswith(BOT_CMD_UNSTICKY):
+                    msg = data['text'].lower()
+                    return msg, data['channel'], data['user']
     return None, None, None
 
 
@@ -64,31 +69,54 @@ def handle(command, channel, user):
     not_safe = 'Whoops...Looks like there\'s already two stickies up, or you\'re less than 6 hours from a scheduled sticky going live :('
     val_failed = 'Look, dammit. I can\'t sticky something if you fuck up the URL. Get it right and then come talk to me.'
     default = 'Uhh...who tf is this guy?'
+    unstickied = 'You got it! The post has been unstickied.'
+    unsticky_val_failed = 'Hmm...I couldn\'t find a current sticky matching the link you gave me.'
+    unsticky_failed = 'For some reason, I just...couldn\'t figure out how to unsticky this post...please forgive me? :\'('
 
-    if user != settings['users']['YOUR_USERID']:
-        slack_client.api_call("chat.postMessage", channel=channel, text=default, as_user=True)
-    elif user == settings['users']['YOUR_USERID']:
+    if user == settings['users']['John'] or user == settings['users']['Jane']:
+        if command.startswith(BOT_CMD_UNSTICKY):
+            link = command.split(BOT_CMD_UNSTICKY)[1].strip().lower()
+            url = link.strip('<>')
+            unsticky_id = sticky_bot.validate_unsticky(url)
+            if unsticky_id:
+                if sticky_bot.unsticky(unsticky_id):
+                    print('Unstickied!')
+                    slack_client.api_call("chat.postMessage", channel=channel, text=unstickied, as_user=False, icon_emoji=':stickybot:', username='stickybot')
+                    return
+                else:
+                    print('Un-sticky failed!')
+                    slack_client.api_call("chat.postMessage", channel=channel, text=unsticky_failed, as_user=False, icon_emoji=':stickybot:', username='stickybot')
+                    return
+            else:
+                print('Un-sticky validation failed!')
+                slack_client.api_call("chat.postMessage", channel=channel, text=unsticky_val_failed, as_user=False, icon_emoji=':stickybot:', username='stickybot')
+                return
+
         link = command.strip('<>')
         post_id = sticky_bot.validate(link)
         if post_id:
             if sticky_bot.is_sticky_safe():
                 if sticky_bot.sticky(post_id):
                     print('Stickied!')
-                    slack_client.api_call("chat.postMessage", channel=channel, text=success, as_user=True)
+                    slack_client.api_call("chat.postMessage", channel=channel, text=success, as_user=False, icon_emoji=':stickybot:', username='stickybot')
+                    if settings['call_home']:
+                        call_home.sendAlert(link)
                     return
                 else:
                     print('Sticky failed!')
-                    slack_client.api_call("chat.postMessage", channel=channel, text=unknown, as_user=True)
+                    slack_client.api_call("chat.postMessage", channel=channel, text=unknown, as_user=False, icon_emoji=':stickybot:', username='stickybot')
                     return
             else:
                 print('Not safe to sticky.')
-                slack_client.api_call("chat.postMessage", channel=channel, text=not_safe, as_user=True)
+                slack_client.api_call("chat.postMessage", channel=channel, text=not_safe, as_user=False, icon_emoji=':stickybot:', username='stickybot')
                 return
         else:
             print('Validation failed.')
-            slack_client.api_call("chat.postMessage", channel=channel, text=val_failed, as_user=True)
+            slack_client.api_call("chat.postMessage", channel=channel, text=val_failed, as_user=False, icon_emoji=':stickybot:', username='stickybot')
             return
-
+    else:
+        slack_client.api_call("chat.postMessage", channel=channel, text=default, as_user=False, icon_emoji=':stickybot:', username='stickybot')
+        return
 
 if __name__ == "__main__":
     firehose()

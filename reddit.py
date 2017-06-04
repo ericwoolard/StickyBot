@@ -1,7 +1,7 @@
 # System imports
 import datetime
 # Third-party imports
-import praw, praw.exceptions
+import praw, prawcore, praw.exceptions
 from prawcore import exceptions
 # Project import
 from config import cfg
@@ -47,6 +47,27 @@ class Reddit(object):
         except praw.exceptions.ClientException as e:
             print('Error during validate: {}'.format(e))
             return None
+        except prawcore.exceptions.NotFound as e:
+            print('Error during validate: {}'.format(e))
+            return None
+
+    def validate_unsticky(self, post_url):
+        """
+        Make sure the URL given to StickyBot to UN-sticky actually
+        exists and is currently stickied.
+        :param post_url: URL for the post to be UN-stickied
+        :return: submission.id or None if not found
+        """
+        try:
+            un_sticky_submission = self.r.submission(id=None, url=post_url)
+            if un_sticky_submission.subreddit.display_name.lower() == self.subreddit and un_sticky_submission.stickied:
+                return un_sticky_submission.id
+        except praw.exceptions.ClientException as e:
+            print('Error during validate: {}'.format(e))
+        except prawcore.exceptions.NotFound as e:
+            print('Error during validate: {}'.format(e))
+
+        return None
 
     def is_sticky_safe(self):
         """
@@ -85,3 +106,14 @@ class Reddit(object):
             print('Sticky failed')
             return False
         return True
+
+    def unsticky(self, post_id):
+        post = self.r.submission(post_id)
+        if post.author in settings['unsticky_authors']:
+            try:
+                post.mod.sticky(state=False)
+                return True
+            except:
+                print('Unsticky failed!')
+
+        return False

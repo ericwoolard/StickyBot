@@ -9,9 +9,12 @@
     },
     "reddit": {
         "subreddit": "SUBREDDIT_NAME",
-        "username": "USER",
-        "password": "PASS",
+        "username": "USERNAME",
+        "password": "PASSWORD",
         "client_id": "REDDIT_CLIENT_ID",
         "client_secret": "REDDIT_CLIENT_SECRET"
-    }
+    },
+    "unsticky_authors": ["USER1_REDDITNAME", "USER2REDDITNAME"],
+    "call_home": false,
+    "call_home_channel": "#SLACK_CHANNEL_NAME"
 }
