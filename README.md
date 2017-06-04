@@ -22,7 +22,7 @@ Once your new bot has been created, follow these steps:
 3) Add the UserID returned from `get_bot_id.py` to `settings.json` on line 4 (It will look something like `U01234567`)
 4) Run `get_bot_id.py` again, replacing `BOT_NAME` on line 5 with the slack name of the user that will be given permission to use stickybot
 5) Add the users ID to `settings.json` under the `users` section. The example names of "John", "Jane" can be whatever you like to distinguish the user(s).
- * To clarify, the name(s) and user ID(s) listed in the `users` section of `settings.json` represent people authorized to use stickybot. Anyone not listed here will be rejected.
+  * To clarify, the name(s) and user ID(s) listed in the `users` section of `settings.json` represent people authorized to use stickybot. Anyone not listed here will be rejected.
 6) Fill out the `reddit` section of `settings.json` with the relevant Reddit and Reddit API information (see `Reddit API info` below if this is unfamiliar to you)
 7) Add a list of **Reddit** usernames that should be allowed to unsticky a post to line 17 of `settings.json`
 8) If you wish to use `call_home`, set it to true on line 18 of `settings.json`, and add the slack channel name to announce on line 19. In my case, stickybot sits in the MatchThread 
