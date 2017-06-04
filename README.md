@@ -18,8 +18,8 @@ First, you'll need to [create a bot user](https://my.slack.com/services/new/bot)
 Once your new bot has been created, follow these steps:
 
 1) Copy the bots API token and add it to `settings.json` on line 3
-2) Run `get_bot_id.py` from the `tests` folder, replacing 'SLACK_BOT_TOKEN' on line 7 with the API token. It will look something like `U01234567`
-3) Add the UserID returned from `get_bot_id.py` to `settings.json` on line 4
+2) Run `get_bot_id.py` from the `tests` folder, replacing 'SLACK_BOT_TOKEN' on line 7 with the API token. 
+3) Add the UserID returned from `get_bot_id.py` to `settings.json` on line 4 (It will look something like `U01234567`)
 4) Run `get_bot_id.py` again, replacing `BOT_NAME` on line 5 with the slack name of the user that will be given permission to use stickybot
 5) Add the users ID to `settings.json` under the `users` section. The example names of "John", "Jane" can be whatever you like to distinguish the user(s).
  * To clarify, the name(s) and user ID(s) listed in the `users` section of `settings.json` represent people authorized to use stickybot. Anyone not listed here will be rejected.
