@@ -1,5 +1,6 @@
 # System imports
 import time
+import websocket
 # Third party imports
 from slackclient import SlackClient
 # Project imports
@@ -28,12 +29,21 @@ def firehose():
     if slack_client.rtm_connect():
         print('StickyBot has begun. Total word domination will begin soon...')
         while True:
-            cmd, channel, user = parser(slack_client.rtm_read())
-            if cmd and channel and user:
-                handle(cmd, channel, user)
-            time.sleep(SOCKET_READ_DELAY)
+            try:
+                cmd, channel, user = parser(slack_client.rtm_read())
+                if cmd and channel and user:
+                    handle(cmd, channel, user)
+                time.sleep(SOCKET_READ_DELAY)
+            except websocket.WebSocketConnectionClosedException as e:
+                print('Error! {0}'.format(e))
+                time.sleep(10)
+                break
+
+        firehose()
     else:
         print('Could not connect to slack..make sure your bot token is correct.')
+        time.sleep(10)
+        firehose()
 
 
 def parser(rtm_out):
