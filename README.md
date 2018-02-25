@@ -27,7 +27,6 @@ Once your new bot has been created, follow these steps:
 7) Add a list of **Reddit** usernames that should be allowed to unsticky a post to line 17 of `settings.json`
 8) If you wish to use `call_home`, set it to true on line 18 of `settings.json`, and add the slack channel name to announce on line 19. In my case, stickybot sits in the MatchThread 
 teams' Slack (separate from our mod team). This alerts us when one of the Match Thread guys uses stickybot so that we can check it.
-9) Lastly, edit the names on [line 76](https://github.com/ericwoolard/StickyBot/blob/master/main.py#L76) of `main.py` to the names listed under `users` in `settings.json`
 
 ### Reddit API Info
 To get your Reddit API credentials, log into the Reddit account you wish to authenticate with the bot, and go to preferences>apps and create a new **'SCRIPT'** app.
