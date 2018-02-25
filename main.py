@@ -85,7 +85,7 @@ def handle(command, channel, user):
     unsticky_val_failed = 'Hmm...I couldn\'t find a current sticky matching the link you gave me.'
     unsticky_failed = 'For some reason, I just...couldn\'t figure out how to unsticky this post...please forgive me? :\'('
 
-    if user == settings['users']['John'] or user == settings['users']['Jane']:
+    if user in settings['users'].values():
         if command.startswith(BOT_CMD_UNSTICKY):
             link = command.split(BOT_CMD_UNSTICKY)[1].strip().lower()
             url = link.strip('<>')
